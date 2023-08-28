@@ -32,7 +32,7 @@ export class MyElement extends LitElement {
     }
 
     #adress {
-      grid-column: 1/3;
+      /* grid-column: 1/3; */
     }
 
     textarea {
@@ -44,7 +44,6 @@ export class MyElement extends LitElement {
       resize: none;
       height: 5rem;
 
-      grid-column: 1/3;
     }
 
     button {
@@ -60,12 +59,17 @@ export class MyElement extends LitElement {
       font-weight: bold;
     }
 
+    .inputRequired {
+      /* width: 100%; */
+    }
+
     input {
       color: white;
       border: none;
       border-radius: 0.475rem;
-      padding: 20px 15px;
+      /* padding: 20px 15px; */
       font-size: 16px;
+      width: 100%;
     }
 
     input:hover,
@@ -106,17 +110,14 @@ export class MyElement extends LitElement {
 
   private onSubmit(e: Event) {
     e.preventDefault();
-    
+
     console.log(this.formData);
   }
 
   nameValidate() {
-    let campos = document.getElementById('TESTE')
-    
-    if(campos?.value?.length < 3) {
-      console.log('Nome deve ter pelo menos 3 caracteres')
+    if (this.formData.name.length < 3) {
+      console.log("Nome deve ter pelo menos 3 caracteres");
     }
-    console.log(campos);
   }
 
   render() {
@@ -125,50 +126,67 @@ export class MyElement extends LitElement {
       <div>
         <h1>Contate-nos</h1>
         <form class="form">
-          <input
-          id="TESTE"
-            class="required"
-            name="name"
-            placeholder="Nome"
-            value=${String(this.formData.name)}
-            @input=${this.nameValidate}
-          />
-          <input
-            class="required"
-            name="lastname"
-            placeholder="Sobrenome"
-            @input=${this.handleChange}
-            value=${String(this.formData.lastName)}
-          />
-          <input
-            class="required"
-            name="email"
-            placeholder="Email"
-            @input=${this.handleChange}
-            value=${String(this.formData.email)}
-          />
-          <input
-            class="required"
-            name="tel"
-            placeholder="Telefone"
-            @input=${this.handleChange}
-            value=${String(this.formData.tel)}
-          />
-          <input
-            class="required"
-            name="address"
-            id="adress"
-            placeholder="Endereço"
-            @input=${this.handleChange}
-            value=${String(this.formData.address)}
-          />
-          <textarea
-            class="required"
-            name="message"
-            placeholder="Digite sua mensagem aqui"
-            @input=${this.handleChange}
-            value=${String(this.formData.message)}
-          ></textarea>
+          <div class="inputRequired">
+            <input
+              id="TESTE"
+              class="required"
+              name="name"
+              placeholder="Nome"
+              value=${String(this.formData.name)}
+              @input=${this.nameValidate}
+            />
+          </div>
+
+          <div class="inputRequired">
+            <input
+              class="required"
+              name="lastname"
+              placeholder="Sobrenome"
+              @input=${this.handleChange}
+              value=${String(this.formData.lastName)}
+            />
+          </div>
+
+          <div class="inputRequired">
+            <input
+              class="required"
+              name="email"
+              placeholder="Email"
+              @input=${this.handleChange}
+              value=${String(this.formData.email)}
+            />
+          </div>
+
+          <div class="inputRequired">
+            <input
+              class="required"
+              name="tel"
+              placeholder="Telefone"
+              @input=${this.handleChange}
+              value=${String(this.formData.tel)}
+            />
+          </div>
+
+          <div class="inputRequired">
+            <input
+              class="required"
+              name="address"
+              id="adress"
+              placeholder="Endereço"
+              @input=${this.handleChange}
+              value=${String(this.formData.address)}
+            />
+          </div>
+
+          <div class="inputRequired">
+            <textarea
+              class="required"
+              name="message"
+              placeholder="Digite sua mensagem aqui"
+              @input=${this.handleChange}
+              value=${String(this.formData.message)}
+            ></textarea>
+          </div>
 
           <button @click=${this.onSubmit}>Enviar</button>
         </form>
