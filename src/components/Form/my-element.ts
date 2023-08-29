@@ -8,10 +8,6 @@ import { customElement, property, state } from "lit/decorators.js";
  * @csspart button - The button
  */
 
-// const formData = {
-//     name: ''
-// }
-
 interface FormDateProps {
   name: String;
   lastName: String;
@@ -27,12 +23,16 @@ export class MyElement extends LitElement {
     form {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 30px 10px;
+      gap: 40px 20px;
       width: calc(50vw - 10rem);
     }
 
     #adress {
-      /* grid-column: 1/3; */
+      grid-column: 1/3;
+    }
+
+    #area {
+      grid-column: 1/3;
     }
 
     textarea {
@@ -43,7 +43,6 @@ export class MyElement extends LitElement {
       font-size: 16px;
       resize: none;
       height: 5rem;
-
     }
 
     button {
@@ -57,29 +56,22 @@ export class MyElement extends LitElement {
 
     h1 {
       font-weight: bold;
-    }
-
-    .inputRequired {
-      /* width: 100%; */
+      line-height: 0;
+      text-align: center;
+      margin-bottom: 50px;
     }
 
     input {
       color: white;
       border: none;
       border-radius: 0.475rem;
-      /* padding: 20px 15px; */
+      padding: 20px 15px;
       font-size: 16px;
-      width: 100%;
-    }
-
-    input:hover,
-    input:focus {
-      outline: solid 1px white;
     }
 
     input::placeholder,
     textarea::placeholder {
-      color: white;
+      color: #ccc;
     }
 
     input,
@@ -89,12 +81,34 @@ export class MyElement extends LitElement {
       color: white;
     }
 
+    .inputValidation {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* .inputvalidation: {
+    } */
+
+    .spanRequired {
+      color: #f5666a;
+      position: absolute;
+      bottom: -30px;
+      display: flex;
+    }
+
+    .none {
+      display: none;
+    }
+
     .required {
       border: 1px solid #f5666a;
     }
   `;
 
-  @state() formData: FormDateProps = {
+  @state() errorRequired: Record<string, boolean> = {};
+
+  @state() formData: FormDateProps | any = {
     name: "",
     lastName: "",
     email: "",
@@ -103,89 +117,136 @@ export class MyElement extends LitElement {
     message: "",
   };
 
+  @state() spanRequired: any = "Campo Obrigatório";
+
   handleChange(event: Event) {
     const { name, value } = event.target as HTMLInputElement;
     this.formData = { ...this.formData, [name]: value };
-  }
-
-  private onSubmit(e: Event) {
-    e.preventDefault();
 
     console.log(this.formData);
   }
 
-  nameValidate() {
-    if (this.formData.name.length < 3) {
-      console.log("Nome deve ter pelo menos 3 caracteres");
+  private onSubmit(e: Event) {
+    e.preventDefault();
+    const fieldsWithErrors: Record<string, boolean> = {};
+
+    for (const [key, value] of Object.entries(this.formData)) {
+      console.log(value === "");
+      if (value === "") {
+        fieldsWithErrors[key] = true;
+      }
+    }
+
+    for (const [key, value] of Object.entries(this.formData)) {
+      console.log(value === "");
+      if (value !== "") {
+        fieldsWithErrors[key] = false;
+      }
+    }
+
+    this.errorRequired = fieldsWithErrors;
+
+    console.log(this.errorRequired.name);
+
+    if (Object.keys(fieldsWithErrors).length === 0) {
+      return;
+      // Lógica para lidar com o envio do formulário
     }
   }
 
   render() {
-    // console.log(this.formData);
     return html`
       <div>
         <h1>Contate-nos</h1>
         <form class="form">
-          <div class="inputRequired">
+          <div class="inputValidation">
             <input
-              id="TESTE"
-              class="required"
+              class=${this.errorRequired.name ? "required" : ""}
               name="name"
               placeholder="Nome"
               value=${String(this.formData.name)}
-              @input=${this.nameValidate}
+              @input=${this.handleChange}
             />
+            <span
+              id="span"
+              class=${this.errorRequired.name ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
-          <div class="inputRequired">
+          <div class="inputValidation">
             <input
-              class="required"
-              name="lastname"
+              class=${this.errorRequired.lastName ? "required" : ""}
+              name="lastName"
               placeholder="Sobrenome"
               @input=${this.handleChange}
               value=${String(this.formData.lastName)}
             />
+            <span
+              id="span"
+              class=${this.errorRequired.lastName ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
-          <div class="inputRequired">
+          <div class="inputValidation">
             <input
-              class="required"
+              class=${this.errorRequired.email ? "required" : ""}
               name="email"
               placeholder="Email"
               @input=${this.handleChange}
               value=${String(this.formData.email)}
             />
+            <span
+              id="span"
+              class=${this.errorRequired.email ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
-          <div class="inputRequired">
+          <div class="inputValidation">
             <input
-              class="required"
+              class=${this.errorRequired.tel ? "required" : ""}
               name="tel"
               placeholder="Telefone"
               @input=${this.handleChange}
               value=${String(this.formData.tel)}
             />
+            <span
+              id="span"
+              class=${this.errorRequired.tel ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
-          <div class="inputRequired">
+          <div id="adress" class="inputValidation">
             <input
-              class="required"
+              class=${this.errorRequired.address ? "required" : ""}
               name="address"
-              id="adress"
               placeholder="Endereço"
               @input=${this.handleChange}
               value=${String(this.formData.address)}
             />
+            <span
+              id="span"
+              class=${this.errorRequired.address ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
-          <div class="inputRequired">
+          <div id="area" class="inputValidation">
             <textarea
-              class="required"
+              class=${this.errorRequired.message ? "required" : ""}
               name="message"
               placeholder="Digite sua mensagem aqui"
               @input=${this.handleChange}
               value=${String(this.formData.message)}
             ></textarea>
+            <span
+              id="span"
+              class=${this.errorRequired.message ? "spanRequired" : "none"}
+              >${this.spanRequired}</span
+            >
           </div>
 
           <button @click=${this.onSubmit}>Enviar</button>
@@ -193,19 +254,6 @@ export class MyElement extends LitElement {
       </div>
     `;
   }
-
-  // private async getApi() {
-  //   const url = "https://pokeapi.co/api/v2/pokemon/ditto";
-  //   const response = await fetch(url);
-  //   const data = await response.json();
-  //   // this.result = data;
-
-  //   console.log("Ué", data);
-  // }
-
-  // Api() {
-  //   this.getApi();
-  // }
 }
 
 declare global {
