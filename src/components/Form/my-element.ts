@@ -26,6 +26,7 @@ export class MyElement extends LitElement {
       gap: 40px 20px;
       width: calc(50vw - 10rem);
     }
+    
 
     #adress {
       grid-column: 1/3;
